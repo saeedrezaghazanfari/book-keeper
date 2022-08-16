@@ -1,0 +1,210 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-03-29 22:06+0430\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\apps.py:8
+msgid "ماژول Api"
+msgstr "Api module"
+
+#: .\models.py:8 .\views.py:122
+msgid "برداشت"
+msgstr "harvest"
+
+#: .\models.py:8 .\views.py:131
+msgid "واریز"
+msgstr "deposit"
+
+#: .\models.py:9 .\models.py:28
+msgid "کاربر"
+msgstr "User"
+
+#: .\models.py:10 .\models.py:39
+msgid "کارت بانکی"
+msgstr "Bank card"
+
+#: .\models.py:11 .\views.py:111
+msgid "مبلغ"
+msgstr "Amount"
+
+#: .\models.py:12
+msgid "واریز یا برداشت؟"
+msgstr "Deposit or withdrawal?"
+
+#: .\models.py:13 .\views.py:113
+msgid "توضیحات"
+msgstr "Description"
+
+#: .\models.py:14 .\views.py:114
+msgid "زمان"
+msgstr "Time"
+
+#: .\models.py:15 .\views.py:115
+msgid "تاریخ"
+msgstr "Date"
+
+#: .\models.py:19
+msgid "تراکنش"
+msgstr "transaction"
+
+#: .\models.py:20
+msgid "تراکنش ها"
+msgstr "Transactions"
+
+#: .\models.py:29 .\views.py:110
+msgid "نام بانک"
+msgstr "Bank name"
+
+#: .\models.py:30
+msgid "شماره کارت"
+msgstr "card number"
+
+#: .\models.py:31
+msgid "شماره حساب"
+msgstr "account number"
+
+#: .\models.py:32
+msgid "موجودی"
+msgstr "Inventory"
+
+#: .\models.py:33
+msgid "شماره‌ی CVV2"
+msgstr "CVV2 number"
+
+#: .\models.py:34
+msgid "شماره شبا"
+msgstr "Shaba number"
+
+#: .\models.py:35
+msgid "تاریخ انقضا"
+msgstr "Expiration date"
+
+#: .\models.py:40
+msgid "کارت های بانکی"
+msgstr "Bank Cards"
+
+#: .\models.py:49 .\models.py:54
+msgid "ورژن"
+msgstr "Version"
+
+#: .\models.py:50
+msgid "توضیحات ورژن"
+msgstr "Version Description"
+
+#: .\models.py:55
+msgid "ورژن‌ها"
+msgstr "Versions"
+
+#: .\views.py:112
+msgid "نوع تراکنش"
+msgstr "Type of transaction"
+
+#: .\views.py:169 .\views.py:257
+msgid "دیروز"
+msgstr "Yesterday"
+
+#: .\views.py:169 .\views.py:257
+msgid "دو روز گذشته"
+msgstr "two days ago"
+
+#: .\views.py:169 .\views.py:257
+msgid "سه روز گذشته"
+msgstr "The last three days"
+
+#: .\views.py:169 .\views.py:257
+msgid "چهار روز گذشته"
+msgstr "The last four days"
+
+#: .\views.py:169 .\views.py:257
+msgid "پنج روز گذشته"
+msgstr "The last five days"
+
+#: .\views.py:169 .\views.py:257
+msgid "شش روز گذشته"
+msgstr "The last six days"
+
+#: .\views.py:169 .\views.py:257
+msgid "هفت روز گذشته"
+msgstr "The last seven days"
+
+#: .\views.py:186 .\views.py:275
+msgid "هفت روز اخیر"
+msgstr "The last seven days"
+
+#: .\views.py:186 .\views.py:275
+msgid "هفته‌ی گذشته"
+msgstr "last week"
+
+#: .\views.py:186 .\views.py:275
+msgid "سه هفته‌ی پیش"
+msgstr "Three weeks ago"
+
+#: .\views.py:186 .\views.py:275
+msgid "چهار هفته‌ی پیش"
+msgstr "Four weeks ago"
+
+#: .\views.py:203 .\views.py:220 .\views.py:237 .\views.py:293 .\views.py:311
+#: .\views.py:329
+msgid "یک ماه اخیر"
+msgstr "A recent month"
+
+#: .\views.py:203 .\views.py:220 .\views.py:237 .\views.py:293 .\views.py:311
+#: .\views.py:329
+msgid "یک ماه گذشته"
+msgstr "One month ago"
+
+#: .\views.py:203 .\views.py:220 .\views.py:237 .\views.py:293 .\views.py:311
+#: .\views.py:329
+msgid "سه ماه گذشته"
+msgstr "The last three months"
+
+#: .\views.py:220 .\views.py:237 .\views.py:311 .\views.py:329
+msgid "چهار ماه گذشته"
+msgstr "The last four months"
+
+#: .\views.py:220 .\views.py:237 .\views.py:311 .\views.py:329
+msgid "پنج ماه گذشته"
+msgstr "The last five months"
+
+#: .\views.py:220 .\views.py:237 .\views.py:311 .\views.py:329
+msgid "شش ماه گذشته"
+msgstr "The last six months"
+
+#: .\views.py:237 .\views.py:329
+msgid "هفت ماه گذشته"
+msgstr "The last seven months"
+
+#: .\views.py:237 .\views.py:329
+msgid "هشت ماه گذشته"
+msgstr "The last eight months"
+
+#: .\views.py:237 .\views.py:329
+msgid "نه ماه گذشته"
+msgstr "Nine months ago"
+
+#: .\views.py:237 .\views.py:329
+msgid "ده ماه گذشته"
+msgstr "The last ten months"
+
+#: .\views.py:237 .\views.py:329
+msgid "یازده ماه گذشته"
+msgstr "The last eleven months"
+
+#: .\views.py:237 .\views.py:329
+msgid "دوازده ماه گذشته"
+msgstr "The last twelve months"
