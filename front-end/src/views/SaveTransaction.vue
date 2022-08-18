@@ -36,6 +36,9 @@
             <button type="submit" v-if="transaction.type != 'Transaction Type' && transaction.bank_name != 'Bank Name' && transaction.price != '' && transaction.time != '' && transaction.date != '' && transaction.desc != ''" class="btn">{{ $t('SAVE') }}</button><br>
         </form>
     </div>
+
+    <div class="loading-progress" :style="{'width': `${percent_loading_page}%`}"></div>
+
     <div class="msg-section">
         <p class="success fade-out" v-if="msg.success"><i class="ti-thumb-up"></i> {{ msg.success }}</p>
         <p class="error fade-out" v-if="msg.error"><i class="ti-thumb-down"></i> {{ msg.error }}</p>
@@ -59,12 +62,14 @@ export default {
             desc: '',
         },
         banks: [],
+        percent_loading_page: 0,
         msg: { success: '', error: '', info: '' },
     }),
 
     created() { this.get_banks(); },
 
     methods: {
+
         async get_banks() {
             let a_token = JSON.parse(localStorage.getItem('BOOKKEEPER_AT'));
             await axios.get(`/${this.$i18n.locale}/api/v1/card-management/`, {
@@ -83,6 +88,7 @@ export default {
         },
 
         async save_transaction() {
+            this.percent_loading_page = 0;
             this.msg = {success: '', error: '', info: '' };
             let a_token = JSON.parse(localStorage.getItem('BOOKKEEPER_AT'));
             let formdata = new FormData();
@@ -96,7 +102,10 @@ export default {
                 headers: {
                     'Authorization': `Bearer ${a_token}`,
                     'Content-Type': 'application/json',
-                }
+                },
+                onUploadProgress: function( progressEvent ) {
+                    this.percent_loading_page = parseInt( Math.round( ( progressEvent.loaded / progressEvent.total ) * 100 ) );
+                }.bind(this)
             })
             .then((result) => {
                 if(result.status === 200) {

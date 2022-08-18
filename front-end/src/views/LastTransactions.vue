@@ -14,6 +14,9 @@
 
         <ul ref="reset_div" class="wrapper-lines d-none">
             <li class="mb-1-2">
+                <i class="ti-server text-light"></i> <span class="text-light">{{ $t('Bank Name') }}:</span> {{ current_bank_transactions }}
+            </li>
+            <li class="mb-1-2">
                 <i class="ti-money text-light"></i> <span class="text-light">{{ $t('Your Stock') }}:</span> {{ last_bank_stock }}
             </li>
             <li @click="reset_div" class="mb-1">
@@ -25,14 +28,15 @@
             <div class="transaction-info" v-for="(transaction, index) in transactions" :key="index">
                 <div class="two-field">
                     <p>{{ transaction.price }} <i class="ti-money font-8-pt"></i></p>
-                    <p>{{ $t(transaction.type) }} <i class="font-8-pt" :class="transaction.type == 'deposit' ? 'ti-angle-double-down text-green' : 'ti-angle-double-up text-red'"></i></p>
+                    <p v-if="transaction.type == 'deposit'">{{ $t(transaction.type) }} <i class="font-8-pt ti-angle-double-down text-green"></i></p>
+                    <p v-else-if="transaction.type == 'withdrawal'">{{ $t(transaction.type) }} <i class="font-8-pt ti-angle-double-up text-red"></i></p>
                 </div>
                 <div class="two-field">
                     <p>{{ transaction.time }} <i class="ti-time font-8-pt"></i></p>
                     <p>{{ transaction.date }} <i class="ti-calendar font-8-pt"></i></p>
                 </div>
                 <button class="btn_show_more link mx-1-2" @click="show_desc(`desc_${index}`, `angle_icon_${index}`, `span_show_more_${index}`)">
-                    <i :id="'angle_icon_'+index" class="ti-angle-double-left"></i> <span :id="'span_show_more_'+index">{{ $t('Show More') }}</span>
+                    <i :id="'angle_icon_'+index" class="ti-angle-double-left icon-lr-transaction"></i> <span :id="'span_show_more_'+index" class="span-lr-transaction">{{ $t('Show More') }}</span>
                 </button>
                 <p class="more-info d-none mx-1-2 mt-1-2" :id="'desc_'+index">{{ transaction.desc }}</p>
             </div>
@@ -100,10 +104,19 @@ export default {
             let iconel = document.getElementById(iconId);
             let spanel = document.getElementById(spanId);
 
-            let moreInfos = document.querySelectorAll('.more-info');
-            moreInfos.forEach((item) => {
+            document.querySelectorAll('.more-info').forEach((item) => {
                 if (item != itemel)
                     item.classList.add('d-none');
+            });
+            document.querySelectorAll('.icon-lr-transaction').forEach((item) => {
+                if (item.classList.contains('ti-angle-double-down')) {
+                    item.classList.remove('ti-angle-double-down');
+                    item.classList.add('ti-angle-double-left');
+                }
+            });
+            document.querySelectorAll('.span-lr-transaction').forEach((item) => {
+                if(item.innerHTML == 'Show Less' || item.innerHTML == 'نمایش کمتر' ) 
+                    item.innerHTML = this.$t('Show More');
             });
 
             if (itemel.classList.contains('d-none')) {

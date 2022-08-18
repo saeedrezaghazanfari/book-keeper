@@ -1,9 +1,11 @@
 import csv
 import os
 import datetime
+import random
 from django.http import HttpResponse
 from persiantools.jdatetime import JalaliDate
 from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
 from django.views import generic
 from rest_framework.response import Response
 from django.utils.translation import gettext_lazy as _
@@ -20,9 +22,37 @@ class GetUserData(APIView):
         data = {
             'first_name': request.user.first_name,
             'last_name': request.user.last_name,
-            'username': request.user.username
+            'username': request.user.username,
+            'profile': str(request.user.profile)
         }
         return Response({'data': data, 'status': 200})
+
+
+# url: /api/v1/create-guest/
+class CreateGuestView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        all_chars = [
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 
+            'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 
+            's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
+            'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+            'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 
+            '1', '2', '3', '4', '5', '6', '7', '8', '9'
+        ]
+        password_gen = ''
+        for _ in range(1, 11):
+            password_gen += random.choice(all_chars)
+        username_gen = f'{random.randint(1000, 9999)}{random.choice(all_chars)}{random.choice(all_chars)}{random.choice(all_chars)}{random.choice(all_chars)}'
+        user = User.objects.create(
+            first_name = 'مهمان',
+            username = username_gen
+        )
+        user.set_password(password_gen)
+        user.save()
+        if user:
+            return Response({'status': 200, 'user': username_gen, 'pw': password_gen})
 
 
 # url: /api/v1/card-management/
@@ -60,9 +90,9 @@ class TransactionManagement(APIView):
 
         elif request.GET.get('type') and request.GET.get('type') == 'search':
             data = TransactionModel.objects.filter(
-                card=BankModel.objects.filter(user=request.user).first(),
+                user=request.user,
                 description__icontains=request.GET.get('query')
-            ).all().values('price', 'in_out', 'description', 'time', 'date')
+            ).all().values('card__name', 'price', 'in_out', 'description', 'time', 'date')
             return Response({'data': data, 'status': 200})
 
     def post(self, request):
@@ -94,16 +124,18 @@ class ProfileCollector(APIView):
             profile = request.FILES['profile']
             extesion = os.path.splitext(str(profile))[1].lower()
             extesion_allowed = ['.png', '.jpg', '.jpeg']
-            ProfileCollectorModel.objects.filter(
-                user=request.user
-            ).delete()
-            for i in extesion_allowed:
-                if extesion == i:
-                    saved_pro = ProfileCollectorModel.objects.create(
-                        user=request.user,
-                        profile=profile
-                    )
-                    return Response({'status': 200, 'profile': str(saved_pro.profile)})
+            if profile:
+                for i in extesion_allowed:
+                    if extesion == i:
+                        ProfileCollectorModel.objects.filter(
+                            user=request.user
+                        ).delete()
+                        saved_pro = ProfileCollectorModel.objects.create(
+                            user=request.user,
+                            profile=profile
+                        )
+                        return Response({'status': 200, 'profile': str(saved_pro.profile)})
+                return Response({'status': 400})
             return Response({'status': 400})
 
 
@@ -113,15 +145,16 @@ class InfoUpdateView(APIView):
         if request.user:
             first_name = request.data['first_name']
             last_name = request.data['last_name']
-            if first_name and last_name:
+            if first_name:
                 request.user.first_name = first_name
+            if last_name:
                 request.user.last_name = last_name
+            if ProfileCollectorModel.objects.filter(user=request.user).first():
                 profile_ex = ProfileCollectorModel.objects.get(user=request.user).profile
                 profile_ex = str(profile_ex).split('/')
                 request.user.profile = '/profiles/' + profile_ex[1]
-                request.user.save()
-                return Response({'status': 200})
-            return Response({'status': 400})
+            request.user.save()
+            return Response({'status': 200})
 
 
 # url: /api/v1/get-last-version/

@@ -28,6 +28,9 @@
         </form>
 
     </div>
+
+    <div class="loading-progress" :style="{'width': `${percent_loading_page}%`}"></div>
+
     <div class="msg-section">
         <p class="success fade-out" v-if="msg.success"><i class="ti-thumb-up"></i> {{ msg.success }}</p>
         <p class="error fade-out" v-if="msg.error"><i class="ti-thumb-down"></i> {{ msg.error }}</p>
@@ -50,6 +53,7 @@ export default {
                 profile: '',
             },
             uploadPercentage: 0,
+            percent_loading_page: 0,
             msg: { success: '', error: '', info: '' },
         }
     },
@@ -59,6 +63,8 @@ export default {
         submit_profile() {
             this.msg ={ success: '', error: '', info: '' };
             this.uploadPercentage = 0;
+            this.$refs.progress_bar_ref.classList.remove('bg-green');
+            this.$refs.progress_bar_ref.classList.remove('bg-red');
             this.profile = this.$refs.profile_field.files[0];
 
             let formdata = new FormData();
@@ -82,7 +88,15 @@ export default {
                     this.result_profile.profile = result.data.profile;
                     this.$refs.btn_uploaded.classList.add('d-none');
                     this.$refs.img_uploaded.classList.remove('d-none');
-                    this.$refs.img_uploaded.setAttribute('src', `http://127.0.0.1:8000/media/${this.result_profile.profile}`);
+                    this.$refs.img_uploaded.setAttribute('src', `${this.$store.state.backend}/media/${this.result_profile.profile}`);
+                }
+                else if(result.data.status === 400) {
+                    this.msg ={ success: '', error: '', info: '' };
+                    this.msg.error = this.$t('Uploaded file Must be an Image');
+                    this.$refs.progress_bar_ref.classList.add('bg-red');
+                    this.result_profile.profile = result.data.profile;
+                    this.$refs.btn_uploaded.classList.remove('d-none');
+                    this.$refs.img_uploaded.classList.add('d-none');
                 }
             })
             .catch((err) => {
@@ -94,6 +108,7 @@ export default {
         },
 
         save_info() {
+            this.percent_loading_page = 0;
             this.msg ={ success: '', error: '', info: '' };
             let formdata = new FormData();
             let a_token = JSON.parse(localStorage.getItem('BOOKKEEPER_AT'));
@@ -105,6 +120,9 @@ export default {
                     'Authorization': `Bearer ${a_token}`,
                     'Content-Type': 'application/json',
                 },
+                onUploadProgress: function( progressEvent ) {
+                    this.percent_loading_page = parseInt( Math.round( ( progressEvent.loaded / progressEvent.total ) * 100 ) );
+                }.bind(this)
             })
             .then((result) => {
                 if(result.data.status === 200) {
@@ -155,6 +173,7 @@ button[type="submit"]:hover { color: white; background-color:#0000008e !importan
 input#profile_field {display: none;}
 .opacity-wrapper { max-height: 307px !important;}
 .bg-green {background-color: rgb(0, 255, 0) !important;}
+.bg-red {background-color: rgb(255, 28, 28) !important;}
 .progress-nav-bar {
     position: relative;
     width: 100%;
