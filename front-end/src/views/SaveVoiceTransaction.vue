@@ -6,11 +6,12 @@
             <button @click="fire_progressive"><i class="ti-microphone-alt"></i></button>
         </div>
 
-        <h4 ref="a"><i class="ti-marker-alt"></i> {{ $t('Transaction Registration') }}</h4>
+        <h4><i class="ti-marker-alt"></i> {{ $t('Transaction Registration') }}</h4>
         <form novalidate @submit.prevent="save_transaction">
             <div class="forminput-control">
                 <input type="text" id="bank_name_field" ref="bank_name_field" v-model="transaction.bank_name" required disabled />
                 <label for="bank_name_field">{{ $t('Bank Name') }} <i class="ti-microphone blink-animation d-none" ref="bank_name_field_mic"></i></label>
+                <div class="after--forminput-control d-none" ref="suggestions1"></div>
             </div>
             <div class="wrapper-twofield">
                 <div class="forminput-control">
@@ -20,6 +21,7 @@
                 <div class="forminput-control">
                     <input v-model="transaction.type" type="text" id="type_transaction_field" ref="type_transaction_field" required disabled />
                     <label for="type_transaction_field">{{ $t('Transaction Type') }} <i class="ti-microphone blink-animation d-none" ref="transaction_type_field_mic"></i></label>
+                    <div class="after--forminput-control after--forminput-control-sm d-none" ref="suggestions2"></div>
                 </div>
             </div>
             <div class="wrapper-date-time">
@@ -200,6 +202,14 @@ export default {
                 audio.play();
             }
 
+            let banksname = [];
+            this.banks.map((item) => {
+                banksname.push(item.name);
+            });
+
+            this.$refs.suggestions1.classList.remove('d-none');
+            this.$refs.suggestions1.innerHTML = `<span style="color: #bfbfbf">${this.$t('Your Choices:')}</span><br> ${banksname.join('<br>')}`;
+
             setTimeout(() => {
 
                 window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -246,6 +256,7 @@ export default {
                     });
                     if (its_ok == true){
                         this.progressive_get_price('real');
+                        this.$refs.suggestions1.classList.add('d-none');
                     } else {
                         this.$refs.bank_name_field.setAttribute('disabled', '');
                         this.transaction.bank_name = '';
@@ -328,6 +339,9 @@ export default {
                 audio.play();
             }
 
+            this.$refs.suggestions2.classList.remove('d-none');
+            this.$refs.suggestions2.innerHTML = `<span style="color: #bfbfbf">${this.$t('Your Choices:')}</span><br> ${this.$t('Deposit')}<br>${this.$t('WithDrawal')}`;
+
             setTimeout(() => {
 
                 window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -373,6 +387,7 @@ export default {
 
                     if (its_ok == true){
                         this.progressive_get_date_time('real');
+                        this.$refs.suggestions2.classList.add('d-none');
                     } else {
                         this.$refs.type_transaction_field.setAttribute('disabled', '');
                         this.transaction.type = '';
@@ -478,6 +493,57 @@ export default {
 </script>
 
 <style scoped>
+.opacity-wrapper .after--forminput-control {
+    position: absolute;
+    top: 37%;
+    right: 25%;
+    padding: 10px 15px;
+    border-radius: 7px;
+    background-color: #0c0e0d;
+    width: 140px;
+    z-index: 1000;
+    font-size: 10pt;
+    transition: all 0.3s linear;
+}
+.opacity-wrapper .after--forminput-control::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -18px;
+    background-color: #0c0e0d;
+    clip-path: polygon(0 6px, 20px 0, 0 20px);
+    height: 20px;
+    width: 20px;
+    z-index: 1000;
+    font-size: 10pt;
+}
+.opacity-wrapper-ltr .after--forminput-control {
+    position: absolute;
+    top: 37%;
+    left: 30%;
+    padding: 10px 15px;
+    border-radius: 7px;
+    background-color: #0c0e0d;
+    width: 140px;
+    z-index: 1000;
+    font-size: 10pt;
+    transition: all 0.3s linear;
+}
+.opacity-wrapper-ltr .after--forminput-control::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -16px;
+    background-color: #0c0e0d;
+    clip-path: polygon(0 0, 20px 6px, 20px 20px);
+    height: 20px;
+    width: 20px;
+    z-index: 1000;
+    font-size: 10pt;
+}
+.after--forminput-control-sm {
+    width: 100px !important;
+}
 .opacity-wrapper input#price_field { width: 97% !important; margin-right: 1px !important; }
 .opacity-wrapper select#type_transaction_field { width: 97% !important; margin-left: 0 !important; float: left; }
 .opacity-wrapper-ltr #bank_name_field { margin-left: 0 !important; }

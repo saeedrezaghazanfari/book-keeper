@@ -58,7 +58,10 @@ class CreateGuestView(APIView):
 # url: /api/v1/card-management/
 class CardManagement(APIView):
     def get(self, request):
-        return Response({'data': BankModel.objects.all().values('name'), 'status': 200})
+        banks = BankModel.objects.filter(
+            user=request.user
+        ).values('name')
+        return Response({'data': banks, 'status': 200})
 
     def post(self, request):
         if request.user:

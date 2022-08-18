@@ -47,7 +47,7 @@ export default {
 
 <style scoped>
 .opacity-wrapper {
-    max-height: 360px !important;
+    max-height: 384px !important;
     width: 35% !important;
 }
 .opacity-wrapper h4{margin-bottom:1rem}.opacity-wrapper ul.wrapper-links{list-style-type:none}.opacity-wrapper ul.wrapper-links li{padding:8px 18px}.opacity-wrapper ul.wrapper-links li a{color:white;transition:all 0.3s ease;font-size:12pt}.opacity-wrapper ul.wrapper-links li a i{padding:0 4px;transition:all 0.3s ease;font-size:12pt;color:gray}.opacity-wrapper ul.wrapper-links li:hover a{padding-right:5px}.opacity-wrapper ul.wrapper-links li:hover i{font-size:15pt;color:white}@media screen and (max-width: 750px){.container .page-wrapper .article .wrapper-body .opacity-wrapper{width:90% !important}}
