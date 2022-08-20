@@ -23,7 +23,7 @@
             <nav class="navbar">
                 <div class="navbar--username">
                     <img v-if="$store.state.user.profile" :src="`${$store.state.backend}/media/${$store.state.user.profile}`" class="ml-1-2" :alt="$store.state.user.username">
-                    <img v-else-if="!$store.state.user.profile" src="@/assets/img/wolf.png" class="ml-1-2">
+                    <img v-else-if="!$store.state.user.profile && $store.state.user.username" src="@/assets/img/wolf.png" class="ml-1-2">
                     <span v-if="$store.state.user.first_name">{{ $store.state.user.first_name }} {{ $store.state.user.last_name }}</span>
                     <i v-if="$store.state.user.first_name" @click="log_out_user" class="ti-power-off mx-1-2 cur-poi" style="font-size: 10px;"></i>
                 </div>

@@ -26,7 +26,7 @@ class TransactionModel(models.Model):
 
 class BankModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('کاربر'))
-    name = models.CharField(max_length=255, unique=True, verbose_name=_('نام بانک'))
+    name = models.CharField(max_length=255, verbose_name=_('نام بانک'))
     card_number = models.BigIntegerField(verbose_name=_('شماره کارت'))
     stock = models.FloatField(verbose_name=_('موجودی'))
 

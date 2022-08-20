@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import timedelta
 from decouple import config
 from django.utils.translation import gettext_lazy as _
 
@@ -30,7 +31,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',          # add for translating
+    'django.middleware.locale.LocaleMiddleware',           # add for translating
     "corsheaders.middleware.CorsMiddleware",               # add for cors origin
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -105,6 +106,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = Path("static_cdn", "media_root")
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 # ######### Custom User ######### #
 AUTH_USER_MODEL = config('AUTH_USER_MODEL')
 
@@ -113,6 +115,13 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8080',
 ] 
 
+# ######### SIMPLE JWT ######### #
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7)
+}
+
+# ######### DRF ######### #
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',

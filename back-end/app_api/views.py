@@ -51,6 +51,43 @@ class CreateGuestView(APIView):
         )
         user.set_password(password_gen)
         user.save()
+
+        mellat_card = BankModel.objects.create(
+            user=user,
+            name='بانک ملت',
+            card_number=f'{random.randint(1000, 9999)}{random.randint(1000, 9999)}{random.randint(1000, 9999)}{random.randint(1000, 9999)}',
+            stock=150000
+        )
+        melli_card = BankModel.objects.create(
+            user=user,
+            name='بانک ملی',
+            card_number=f'{random.randint(1000, 9999)}{random.randint(1000, 9999)}{random.randint(1000, 9999)}{random.randint(1000, 9999)}',
+            stock=250000
+        )
+        refah_card = BankModel.objects.create(
+            user=user,
+            name='بانک رفاه',
+            card_number=f'{random.randint(1000, 9999)}{random.randint(1000, 9999)}{random.randint(1000, 9999)}{random.randint(1000, 9999)}',
+            stock=310000
+        )
+        for _ in range(1, 16):
+            cards = [mellat_card, melli_card, refah_card]
+            types = ['withdrawal', 'deposit']
+            type_choosed = random.choice(types)
+            if type_choosed == 'withdrawal':
+                descs = ['خرید بستنی', 'خرید لباس', 'خرید کیک و نوشابه', 'خرید سبزیجات', 'خرید لبنیات', 'خرید شارژر موبایل', 'خرید کتاب', 'خرید پیتزا']
+            elif type_choosed == 'deposit':
+                descs = ['فروش بستنی', 'فروش لباس', 'فروش کیک و نوشابه', 'فروش سبزیجات', 'فروش لبنیات', 'فروش شارژر موبایل', 'فروش کتاب', 'فروش پیتزا']
+            TransactionModel.objects.create(
+                user=user,
+                card=random.choice(cards),
+                price=random.randint(100, 999) * 1000,
+                in_out=type_choosed,
+                description=random.choice(descs),
+                time=f'{random.randint(1, 23)}:{random.randint(10, 59)}:00',
+                date=datetime.datetime.now() - datetime.timedelta(days=random.randint(1, 365))
+            )
+
         if user:
             return Response({'status': 200, 'user': username_gen, 'pw': password_gen})
 
