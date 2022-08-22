@@ -41,8 +41,14 @@
                     <option value="bar">{{ $t('Bar') }}</option>
                     <option value="doughnut">{{ $t('Doughnut') }}</option>
                 </select>
-                <button v-if="!show_reload_icon" type="submit" ref="submit_btn_ref" :disabled="!!(period == 'select') == true" :class="period == 'select' ? 'disabled btn' : 'btn'">{{ $t('Show Charts') }}</button>
+
+                <button class="d-none data_btnc" ref="data_btncc"><span class="mx-1-2">{{all_or_bankname == 'all' ? $t('All Banks') : all_or_bankname}}</span> <span class="mx-1-2">{{period + $t('Days')}}</span> <span class="mx-1-2">{{$t(type_transactions)}}</span></button><br>
+                <button class="d-none btn-chart" ref="line_btnc" @click="show_line_chart">{{ $t('Line Chart') }} <i class="ti-line-double"></i></button>
+                <button class="d-none btn-chart" ref="bar_btnc" @click="show_bar_chart">{{ $t('Bar Chart') }} <i class="ti-bar-chart"></i></button>
+                <button class="d-none btn-chart" ref="doughnut_btnc" @click="show_doughnut_chart">{{ $t('Doughnut Chart') }} <i class="ti-pie-chart"></i></button>
                 <button @click="$router.go()" class="btn reload-btn d-none" ref="reload_btn_ref">{{ $t('Reload') }}</button>
+
+                <button v-if="!show_reload_icon" type="submit" ref="submit_btn_ref" :disabled="!!(period == 'select') == true" :class="period == 'select' ? 'disabled btn' : 'btn'">{{ $t('Show Charts') }}</button>
             </div>
         </form>
         <br>
@@ -188,6 +194,10 @@ export default {
                 if(result.data.status === 200) {
                     this.$refs.submit_btn_ref.classList.add('d-none');
                     this.$refs.reload_btn_ref.classList.remove('d-none');
+                    this.$refs.data_btncc.classList.remove('d-none');
+                    this.$refs.line_btnc.classList.remove('d-none');
+                    this.$refs.bar_btnc.classList.remove('d-none');
+                    this.$refs.doughnut_btnc.classList.remove('d-none');
                     this.$refs.line_chart_div.classList.add('d-none');
                     this.$refs.bar_chart_div.classList.add('d-none');
                     this.$refs.doughnut_chart_div.classList.add('d-none');
@@ -226,9 +236,45 @@ export default {
             })
             .catch((err) => {
                 if(err.response.status === 401) {
-                    this.update_access_token();
+                    this.$router.push('/' + this.$i18n.locale + '/sign-in');
                 }
             });
+        },
+
+        show_line_chart() {
+            this.type_chart = 'line';
+
+            this.$refs.line_chart_div.classList.remove('d-none');
+            this.$refs.line_btnc.classList.add('d-none');
+
+            this.$refs.bar_chart_div.classList.add('d-none');
+            this.$refs.bar_btnc.classList.remove('d-none');
+
+            this.$refs.doughnut_chart_div.classList.add('d-none');
+            this.$refs.doughnut_btnc.classList.remove('d-none');
+
+        },
+        show_bar_chart() {
+            this.type_chart = 'bar';
+            this.$refs.bar_chart_div.classList.remove('d-none');
+            this.$refs.bar_btnc.classList.add('d-none');
+
+            this.$refs.line_chart_div.classList.add('d-none');
+            this.$refs.line_btnc.classList.remove('d-none');
+
+            this.$refs.doughnut_chart_div.classList.add('d-none');
+            this.$refs.doughnut_btnc.classList.remove('d-none');
+        },
+        show_doughnut_chart() {
+            this.type_chart = 'doughnut';
+            this.$refs.doughnut_chart_div.classList.remove('d-none');
+            this.$refs.doughnut_btnc.classList.add('d-none');
+
+            this.$refs.bar_chart_div.classList.add('d-none');
+            this.$refs.bar_btnc.classList.remove('d-none');
+
+            this.$refs.line_chart_div.classList.add('d-none');
+            this.$refs.line_btnc.classList.remove('d-none');
         },
 
         async get_banks() {
@@ -248,31 +294,32 @@ export default {
             });
         },
 
-        async update_access_token() {
-            let r_token = JSON.parse(localStorage.getItem('BOOKKEEPER_RT'));
-            if(r_token) {
-                let formdata = new FormData();
-                formdata.append('refresh', r_token)
-                await axios.post(`/${this.$i18n.locale}/api/v1/get-token/refresh-token/`, formdata, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                })
-                .then((result) => {
-                    localStorage.setItem('BOOKKEEPER_AT', JSON.stringify(result.data.access));
-                    this.$router.push('/' + this.$i18n.locale + '/show-chart');
-                })
-                .catch((err) => {
-                    this.$router.push('/' + this.$i18n.locale + '/sign-in')
-                })
-            } else {
-                this.$router.push('/' + this.$i18n.locale + '/sign-in')
-            }
-        },
-
         beforeRenderLogic(event){
         },
     },
+
+    async mounted() {
+        // check user
+        let r_token = JSON.parse(localStorage.getItem('BOOKKEEPER_RT'));
+        if(r_token) {
+            let formdata = new FormData();
+            formdata.append('refresh', r_token)
+            await axios.post(`/${this.$i18n.locale}/api/v1/get-token/refresh-token/`, formdata, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then((result) => {
+                localStorage.setItem('BOOKKEEPER_AT', JSON.stringify(result.data.access));
+                this.$store.dispatch('getUserData', {at: result.data.access, lang: this.$i18n.locale});
+            })
+            .catch((err) => {
+                this.$router.push('/' + this.$i18n.locale + '/sign-in');
+            })
+        } else {
+            this.$router.push('/' + this.$i18n.locale + '/sign-in');
+        }
+    }
 }
 </script>
 
@@ -282,6 +329,23 @@ export default {
     min-height: 83% !important;
     background-color: #000000f5 !important;
 }
+.btn-chart, .data_btnc {
+    padding: 8px 13px;
+    border-radius: 5px;
+    background: linear-gradient(rgb(77, 77, 77), rgb(31, 31, 31));
+    cursor: url(../assets/img/cursor-link.png),auto;
+    position: relative;
+    transition: all 0.3s ease;
+    color: white;
+    border-bottom: 1px solid rgb(214, 214, 214);
+}
+.data_btnc {
+    background: linear-gradient(rgb(77, 77, 77), rgb(31, 31, 31));
+    cursor: none;
+    color: rgb(201, 201, 201);
+    border-bottom: none;
+}
+.data_btnc span {cursor: none;}
 ul {list-style: none;}
 .opacity-wrapper ul.wrapper-lines li{padding:0px 18px; color:white;transition:all 0.3s ease;font-size:12pt}
 .opacity-wrapper ul.wrapper-lines li i{font-size: 10pt;}
@@ -346,5 +410,5 @@ ul {list-style: none;}
     }
 }
 .wrapper-gotoallpage button i {font-size: 30pt;cursor: url(../assets/img/cursor-link.png),auto;color: white;}
-.reload-btn{color: white;background-color: #7d00006e;padding: 0.3rem 1rem;border-radius: 5px;min-width: 150px;}.opacity-wrapper h4{margin-bottom:1rem}.opacity-wrapper .three-forminput-control{display:flex;flex-wrap:wrap;position:relative}.opacity-wrapper .three-forminput-control select{min-width:150px;padding:6px 0;font-size:11pt;color:#fff;margin:0 5px 5px 5px;border:none;border-bottom:1px solid #fff;background:#2424244f;width:100% !important}.opacity-wrapper .three-forminput-control button[type="submit"]{color:white;background-color:#0000006e;padding:0.3rem 1rem;border-radius:5px;min-width:150px}.opacity-wrapper .three-forminput-control select{flex:2}.opacity-wrapper .three-forminput-control button[type="submit"]{flex:1}@media screen and (max-width: 900px){.container .page-wrapper .article .wrapper-body .opacity-wrapper{overflow-x:auto}}
+.reload-btn{color: white;background-color: #7d00006e;padding: 8px 13px;border-radius: 5px;}.opacity-wrapper h4{margin-bottom:1rem}.opacity-wrapper .three-forminput-control{display:flex;flex-wrap:wrap;position:relative}.opacity-wrapper .three-forminput-control select{min-width:150px;padding:6px 0;font-size:11pt;color:#fff;margin:0 5px 5px 5px;border:none;border-bottom:1px solid #fff;background:#2424244f;width:100% !important}.opacity-wrapper .three-forminput-control button[type="submit"]{color:white;background-color:#0000006e;padding:0.3rem 1rem;border-radius:5px;min-width:150px}.opacity-wrapper .three-forminput-control select{flex:2}.opacity-wrapper .three-forminput-control button[type="submit"]{flex:1}@media screen and (max-width: 900px){.container .page-wrapper .article .wrapper-body .opacity-wrapper{overflow-x:auto}}
 </style>

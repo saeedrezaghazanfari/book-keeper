@@ -22,9 +22,9 @@
             <!-- navbar -->
             <nav class="navbar">
                 <div class="navbar--username">
-                    <img v-if="$store.state.user.profile" :src="`${$store.state.backend}/media/${$store.state.user.profile}`" class="ml-1-2" :alt="$store.state.user.username">
-                    <img v-else-if="!$store.state.user.profile && $store.state.user.username" src="@/assets/img/wolf.png" class="ml-1-2">
-                    <span v-if="$store.state.user.first_name">{{ $store.state.user.first_name }} {{ $store.state.user.last_name }}</span>
+                    <img @click="$router.push('/' + this.$i18n.locale + '/chnage-info')" v-if="$store.state.user.profile" :src="`${$store.state.backend}/media/${$store.state.user.profile}`" class="ml-1-2 link" :alt="$store.state.user.username">
+                    <img @click="$router.push('/' + this.$i18n.locale + '/chnage-info')" v-else-if="!$store.state.user.profile && $store.state.user.username" src="@/assets/img/wolf.png" class="ml-1-2 link">
+                    <span @click="$router.push('/' + this.$i18n.locale + '/chnage-info')" class="link" v-if="$store.state.user.first_name">{{ $store.state.user.first_name }} {{ $store.state.user.last_name }}</span>
                     <i v-if="$store.state.user.first_name" @click="log_out_user" class="ti-power-off mx-1-2 cur-poi" style="font-size: 10px;"></i>
                 </div>
                 <div class="navbar--searchbar">
@@ -135,7 +135,7 @@ export default {
                 this.$router.push('/' + this.$i18n.locale + '/save-voice-transaction');
             } else {
                 this.repeatAchilleVoice = false;
-                let audio = new Audio(`/audio/${this.$i18n.locale}/thankyou.mp3`);
+                let audio = new Audio(`/audio/en/thankyou.mp3`);
                 audio.play();
 
                 setTimeout(() => {
@@ -156,6 +156,8 @@ export default {
         reload_page() {location.reload()},
 
         get_voice_to_search() {
+
+            this.search_text = '';
 
             if(!this.$refs.icon_get_voice_ref.classList.contains('blink-animation')) {
 
@@ -188,20 +190,24 @@ export default {
                     my_this.$refs.icon_get_voice_ref.classList.remove('blink-animation');
                     my_this.$refs.input_search_txt.setAttribute('placeholder', my_this.$t('Search for Transactions'));
                     recognition.stop();
+                    if(my_this.search_text != "")
+                        my_this.search_transaction();
                 }
                 recognition.onnomatch = function(event) { // not found results
                     my_this.$refs.icon_get_voice_ref.classList.remove('blink-animation');
                     my_this.$refs.input_search_txt.setAttribute('placeholder', my_this.$t('Search for Transactions'));
                     recognition.stop();
+                    if(my_this.search_text != "")
+                        my_this.search_transaction();
                 }
                 recognition.onspeechend = function(event) { // end of get tunes
                     my_this.$refs.icon_get_voice_ref.classList.remove('blink-animation');
                     my_this.$refs.input_search_txt.setAttribute('placeholder', my_this.$t('Search for Transactions'));
                     recognition.stop();
-                    my_this.search_transaction();
+                    if(my_this.search_text != "")
+                        my_this.search_transaction();
                 }
             }
-
         },
 
         paths_to_active_home() {

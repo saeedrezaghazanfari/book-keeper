@@ -77,5 +77,10 @@
    "Your information was Updated": "اطلاعات شما به روز شد",
    "Login as a Guest": "ورود به عنوان مهمان",
    "Uploaded file Must be an Image": "فایل آپلود شده باید تصویر باشد",
-   "Your Account created Successful": "حساب کاربری شما با موفقیت ساخته شد"
+   "Your Account created Successful": "حساب کاربری شما با موفقیت ساخته شد",
+   "Line Chart": "نمودار خطی",
+   "Bar Chart": "نمودار میله ای",
+   "Doughnut Chart": "نمودار دونات",
+   "Days": "روز",
+   "All Banks": "همه ی بانک ها"
 }

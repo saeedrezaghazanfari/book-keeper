@@ -111,6 +111,29 @@ export default {
                 this.$router.push('/' + this.$i18n.locale + '/sign-in');
             });            
         },
+    },
+
+    async mounted() {
+        // check user
+        let r_token = JSON.parse(localStorage.getItem('BOOKKEEPER_RT'));
+        if(r_token) {
+            let formdata = new FormData();
+            formdata.append('refresh', r_token)
+            await axios.post(`/${this.$i18n.locale}/api/v1/get-token/refresh-token/`, formdata, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then((result) => {
+                localStorage.setItem('BOOKKEEPER_AT', JSON.stringify(result.data.access));
+                this.$store.dispatch('getUserData', {at: result.data.access, lang: this.$i18n.locale});
+            })
+            .catch((err) => {
+                this.$router.push('/' + this.$i18n.locale + '/sign-in');
+            })
+        } else {
+            this.$router.push('/' + this.$i18n.locale + '/sign-in');
+        }
     }
 }
 </script>

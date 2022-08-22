@@ -16,8 +16,8 @@
                 </a>
             </div>
             <div class="wrapper_2btn">
-                <button type="button" class="btn" @click="login_guest">{{ $t('Login as a Guest') }}</button>
-                <button type="submit" class="btn">{{ $t('Login') }}</button>
+                <button type="button" class="btn" @click="login_guest"><span ref="btn_span">{{ $t('Login as a Guest') }}</span><div class="spinner d-none" ref="spinner_btn"></div></button>
+                <button type="submit" class="btn"><span ref="submit_span">{{ $t('Login') }}</span><div class="spinner d-none" ref="spinner_submit"></div></button>
             </div>
         </form>
     </div>
@@ -57,6 +57,8 @@ export default {
         },
 
         async login_guest() {
+            this.$refs.spinner_btn.classList.remove('d-none');
+            this.$refs.btn_span.classList.add('d-none');
             this.percent_loading_page = 0;
             this.msg ={ success: '', error: '', info: '' };
 
@@ -74,11 +76,15 @@ export default {
                     this.msg.success = this.$t('Your Account created Successful');
                     this.username = result.data.user;
                     this.password = result.data.pw;
+                    this.$refs.spinner_btn.classList.add('d-none');
+                    this.$refs.btn_span.classList.remove('d-none');
                     this.user_login();
                 }
             })
             .catch((err) => {
                 if(err.response) {
+                    this.$refs.spinner_btn.classList.add('d-none');
+                    this.$refs.btn_span.classList.remove('d-none');
                     this.msg ={ success: '', error: '', info: '' };
                     this.msg.error = this.$t('There is a Problem in Your Form');
                 }
@@ -86,6 +92,8 @@ export default {
         },
 
         async user_login() {
+            this.$refs.spinner_submit.classList.remove('d-none');
+            this.$refs.submit_span.classList.add('d-none');
             this.percent_loading_page = 0;
             let formdata = new FormData();
             formdata.append('username', this.username);
@@ -99,12 +107,16 @@ export default {
                 }.bind(this)
             })
             .then((result) => {
+                this.$refs.spinner_submit.classList.add('d-none');
+                this.$refs.submit_span.classList.remove('d-none');
                 localStorage.setItem('BOOKKEEPER_RT', JSON.stringify(result.data.refresh));
                 localStorage.setItem('BOOKKEEPER_AT', JSON.stringify(result.data.access));
                 this.$store.dispatch('getUserData', {at: result.data.access, lang: this.$i18n.locale});
                 this.$router.push('/' + this.$i18n.locale + '/');
             })
             .catch((err) => {
+                this.$refs.spinner_submit.classList.add('d-none');
+                this.$refs.submit_span.classList.remove('d-none');
                 if(err.response.status === 401) {
                     this.msg.error = this.$t('Your UserName or PassWord is Wrong. Try Again!')
                 }
