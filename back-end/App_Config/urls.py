@@ -15,10 +15,14 @@ urlpatterns += i18n_patterns(
     # AUTH
     path('api/v1/get-token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/v1/get-token/refresh-token/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    
     # APP
     path('', include('app_api.urls')),
     path('change/language/', views.activate_language, name='activate_lang'),
-    path('', admin.site.urls),  #default page
+
+    # ADMIN
+    path('admin', views.admin_fake_page),
+    path('achille/admin/panel', admin.site.urls),
 )
 
 if settings.DEBUG:

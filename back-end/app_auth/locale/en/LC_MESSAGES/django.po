@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-20 22:13+0430\n"
+"POT-Creation-Date: 2022-08-23 11:06+0430\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,17 +23,25 @@ msgid "ماژول احراز هویت"
 msgstr "Authentication Module"
 
 #: .\models.py:8
+msgid "آیپی"
+msgstr "IP"
+
+#: .\models.py:9
 msgid "پروفایل"
 msgstr "Profile"
 
-#: .\models.py:12
+#: .\models.py:10
+msgid "آیا این کاربر مهمان است؟"
+msgstr "Is this user a Guest?"
+
+#: .\models.py:14
 msgid "نام و نام خانوادگی"
 msgstr "First Name and Last Name"
 
-#: .\models.py:16
+#: .\models.py:18
 msgid "کاربر"
 msgstr "User"
 
-#: .\models.py:17
+#: .\models.py:19
 msgid "کاربران"
 msgstr "Users"

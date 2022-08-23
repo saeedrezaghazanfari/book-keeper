@@ -82,5 +82,10 @@
    "Bar Chart": "نمودار میله ای",
    "Doughnut Chart": "نمودار دونات",
    "Days": "روز",
-   "All Banks": "همه ی بانک ها"
+   "All Banks": "همه ی بانک ها",
+    "Your Bank Name must have a Value": "نام بانک باید مقدار داشته باشد",
+    "Your Stock must be Greater than 0": "موجودی شما باید بیشتر از 0 باشد",
+    "The Card Number must be 16 Digits": "شماره کارت باید بیشتر از 16 عدد باشد",
+    "Card Number is Duplicated": "شماره کارت تکراری است",
+    "Bank Name is Duplicated": "نام بانک تکراری است"
 }

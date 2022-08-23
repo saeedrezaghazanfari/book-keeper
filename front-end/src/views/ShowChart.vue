@@ -48,7 +48,7 @@
                 <button class="d-none btn-chart" ref="doughnut_btnc" @click="show_doughnut_chart">{{ $t('Doughnut Chart') }} <i class="ti-pie-chart"></i></button>
                 <button @click="$router.go()" class="btn reload-btn d-none" ref="reload_btn_ref">{{ $t('Reload') }}</button>
 
-                <button v-if="!show_reload_icon" type="submit" ref="submit_btn_ref" :disabled="!!(period == 'select') == true" :class="period == 'select' ? 'disabled btn' : 'btn'">{{ $t('Show Charts') }}</button>
+                <button v-if="!show_reload_icon" type="submit" ref="submit_btn_ref" :disabled="!!(period == 'select') == true" :class="period == 'select' ? 'disabledbtn btn' : 'btn'">{{ $t('Show Charts') }}</button>
             </div>
         </form>
         <br>
@@ -344,6 +344,13 @@ export default {
     cursor: none;
     color: rgb(201, 201, 201);
     border-bottom: none;
+}
+.disabledbtn {
+    cursor: none;
+    color: rgb(80, 80, 80) !important;
+}
+button[type="submit"] {
+    background-color: #121212 !important;
 }
 .data_btnc span {cursor: none;}
 ul {list-style: none;}

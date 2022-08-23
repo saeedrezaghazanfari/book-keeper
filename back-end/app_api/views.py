@@ -7,6 +7,7 @@ from persiantools.jdatetime import JalaliDate
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from django.views import generic
+from Extentions.utils import get_client_ip
 from rest_framework.response import Response
 from django.utils.translation import gettext_lazy as _
 from .serializers import (
@@ -20,17 +21,32 @@ from .models import BankModel, TransactionModel, VersionsModel, ProfileCollector
 class GetUserData(APIView):
     def get(self, request):
         data = {
+            'is_superuser': request.user.is_superuser,
             'first_name': request.user.first_name,
             'last_name': request.user.last_name,
             'username': request.user.username,
-            'profile': str(request.user.profile)
+            'profile': str(request.user.profile),
+            'is_guest': request.user.is_guest
         }
+
+        # get user ip
+        ip = get_client_ip(request=request)
+        if ip != request.user.ip_address:
+            request.user.ip_address = ip
+            request.user.save()
+
         return Response({'data': data, 'status': 200})
 
 
 # url: /api/v1/create-guest/
 class CreateGuestView(APIView):
     permission_classes = [AllowAny]
+
+    def get(self, request):
+        if request.GET.get('un'):
+            User.objects.get(username=request.GET.get('un')).delete()
+            return Response({'status': 200})
+
     def post(self, request):
         all_chars = [
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 
@@ -47,7 +63,8 @@ class CreateGuestView(APIView):
         username_gen = f'{random.randint(1000, 9999)}{random.choice(all_chars)}{random.choice(all_chars)}{random.choice(all_chars)}{random.choice(all_chars)}'
         user = User.objects.create(
             first_name = 'مهمان',
-            username = username_gen
+            username = username_gen,
+            is_guest=True
         )
         user.set_password(password_gen)
         user.save()
@@ -104,13 +121,19 @@ class CardManagement(APIView):
         if request.user:
             serializer = BankSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            serializer.save()
-            obj = BankModel.objects.filter(
+
+            if BankModel.objects.filter(user=request.user, card_number=request.data['card_number']).first():
+                return Response({'status': 400, 'msg': 'c'})
+
+            if BankModel.objects.filter(user=request.user, name=request.data['name']).first():
+                return Response({'status': 400, 'msg': 'n'})
+
+            BankModel.objects.create(
+                user=request.user,
+                name=request.data['name'],
                 card_number=request.data['card_number'], 
-                name=request.data['name']
-            ).first()
-            obj.user = request.user
-            obj.save()
+                stock=request.data['stock']
+            )
             return Response({'status': 200})
 
 
@@ -201,6 +224,8 @@ class InfoUpdateView(APIView):
 class GetLastVersion(APIView):
     def get(self, request):
         v = VersionsModel.objects.last()
+        if not v:
+            v = VersionsModel.objects.create(version='0.0.0', description='0.0.0')
         return Response({'version': v.version, 'description': v.description, 'status': 200})
 
 

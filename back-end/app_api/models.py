@@ -1,6 +1,6 @@
 from django.db import models
 from app_auth.models import User 
-from app_auth.utils import user_image_path
+from Extentions.utils import user_image_path
 from django.utils.translation import gettext_lazy as _
 
 

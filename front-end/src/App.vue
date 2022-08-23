@@ -37,6 +37,7 @@
                     </div>
                 </div>
                 <div class="navbar--navigator">
+                    <a :href="`${$store.state.backend}/${$i18n.locale}/achille/admin/panel`" target="_blank" v-if="$store.state.user.is_superuser"><button><i class="ti-user"></i></button></a>
                     <button @click="$router.push('/' + this.$i18n.locale + '/')"><i :class="paths_to_active_home() ? 't-black' : ''" class="ti-home"></i></button>
                     <button @click="reload_page()"><i class="ti-reload"></i></button>
                     <button @click="$router.go(1)"><i class="ti-arrow-right"></i></button>
@@ -235,25 +236,46 @@ export default {
                 this.$router.push('/' + this.$i18n.locale + '/sign-in');
             });
         },
-        log_out_user() {
-            localStorage.removeItem('BOOKKEEPER_AT');
-            localStorage.removeItem('BOOKKEEPER_RT');
-            this.$store.state.user = '';
-            this.$router.push('/' + this.$i18n.locale + '/sign-in');
+
+        async log_out_user() {
+            if (this.$store.state.user.is_guest == true) {
+                await axios.get(`/${this.$i18n.locale}/api/v1/create-guest/?un=${this.$store.state.user.username}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then((result) => {
+                    if(result.status === 200) {
+                        localStorage.removeItem('BOOKKEEPER_AT');
+                        localStorage.removeItem('BOOKKEEPER_RT');
+                        this.$store.commit('RESET_USER');
+                        this.$router.push('/' + this.$i18n.locale + '/sign-in');
+                    }
+                });
+            } else {
+                localStorage.removeItem('BOOKKEEPER_AT');
+                localStorage.removeItem('BOOKKEEPER_RT');
+                this.$store.commit('RESET_USER');
+                this.$router.push('/' + this.$i18n.locale + '/sign-in');
+            }
         },
+
         control_input(e) {
             if(e.target.value.length > 0) { this.$refs.close_ref.classList.remove('d-none'); }
             else if(e.target.value.length < 1 ) { this.$refs.close_ref.classList.add('d-none'); }
         },
+
         search_transaction() {
             if (this.search_text) {
                 this.$store.commit('SAVE_SEARCH_QUERY', this.search_text);
                 this.$router.push(`/${this.$i18n.locale}/search-transaction/${this.search_text}`);
             }
         },
+
         reset_searchbar() {
             this.search_text = '';
-            this.$router.push('/' + this.$i18n.locale + '/last-transactions');
+            if(this.$route.path.includes('/search-transaction'))
+                this.$router.push('/' + this.$i18n.locale + '/last-transactions');
         }
     }
 }

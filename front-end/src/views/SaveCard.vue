@@ -16,9 +16,9 @@
             <div class="forminput-control">
                 <input type="number" v-model="card.cardnumber" id="cardnumber_field" required>
                 <label for="cardnumber_field">{{ $t('Card Number') }}</label>
-                
             </div>
             
+            <p ref="card_ref" class="d-nne error_p_form"></p>
             <button type="submit" class="btn">{{ $t('SAVE') }}</button><br>
         </form>
 
@@ -50,7 +50,26 @@ export default {
     }),
 
     methods: {
+
         async save_card() {
+            this.$refs.card_ref.classList.add('d-none');
+            
+            if (this.card.bankname == '') {
+                this.$refs.card_ref.classList.remove('d-none');
+                this.$refs.card_ref.innerHTML = this.$t('Your Bank Name must have a Value');
+                return;
+            }
+            if (this.card.current_stock <= 0 || this.card.current_stock == '') {
+                this.$refs.card_ref.classList.remove('d-none');
+                this.$refs.card_ref.innerHTML = this.$t('Your Stock must be Greater than 0');
+                return;
+            }
+            if (this.card.cardnumber.toString().length != 16) {
+                this.$refs.card_ref.classList.remove('d-none');
+                this.$refs.card_ref.innerHTML = this.$t('The Card Number must be 16 Digits');
+                return;
+            }
+
             this.percent_loading_page = 0;
             this.msg ={ success: '', error: '', info: '' };
             let formdata = new FormData();
@@ -74,6 +93,17 @@ export default {
                     setTimeout(() => {
                         this.$router.push('/' + this.$i18n.locale + '/')
                     }, 3000);
+
+                } else if(result.data.status == 400) {
+
+                    if(result.data.msg == 'c') {
+                        this.$refs.card_ref.classList.remove('d-none');
+                        this.$refs.card_ref.innerHTML = this.$t('Card Number is Duplicated');
+                    }
+                    else if(result.data.msg == 'n') {
+                        this.$refs.card_ref.classList.remove('d-none');
+                        this.$refs.card_ref.innerHTML = this.$t('Bank Name is Duplicated');
+                    }
                 }
             })
             .catch((err) => {

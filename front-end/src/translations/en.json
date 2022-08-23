@@ -82,5 +82,10 @@
     "Bar Chart": "Bar Chart",
     "Doughnut Chart": "Doughnut Chart",
     "Days": "Days",
-    "All Banks": "All Banks"
+    "All Banks": "All Banks",
+    "Your Bank Name must have a Value": "Your Bank Name must have a Value",
+    "Your Stock must be Greater than 0": "Your Stock must be Greater than 0",
+    "The Card Number must be 16 Digits": "The Card Number must be 16 Digits",
+    "Card Number is Duplicated": "Card Number is Duplicated",
+    "Bank Name is Duplicated": "Bank Name is Duplicated"
 }

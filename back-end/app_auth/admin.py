@@ -6,9 +6,11 @@ from .models import User
 
 class AdminUser(UserAdmin):
     UserAdmin.fieldsets[1][1]['fields'] = (
+        'ip_address',
         'first_name',
         'last_name',
         'profile',
+        'is_guest',
     )
     UserAdmin.fieldsets[2][1]['fields'] = (
         'is_active',
@@ -17,7 +19,7 @@ class AdminUser(UserAdmin):
         # 'groups',
         # 'user_permissions',
     )
-    list_display = ('id', 'username', 'get_full_name')
+    list_display = ('id', 'username', 'get_full_name', 'ip_address', 'is_guest')
     ordering = ['-id']
 
 admin.site.register(User, AdminUser)

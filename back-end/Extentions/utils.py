@@ -2,6 +2,15 @@ import os
 from random import randint
 
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
 # before function File storage
 def get_filename_ext_rand(filepath):
     base_name = os.path.basename(filepath)
