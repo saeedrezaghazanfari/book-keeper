@@ -1,11 +1,12 @@
-# front-end
+# Achille Front End
+This is Achille Frontend.
 
-## Project setup
+### Project Setup
 ```
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+### Compiles and Hot-Reloads for Development
 ```
 yarn serve
 ```
@@ -14,6 +15,3 @@ yarn serve
 ```
 yarn build
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
