@@ -1,0 +1,17 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{% if LANGUAGE_CODE == 'fa' %}صفحه پیدا نشد.{% elif LANGUAGE_CODE == 'en' %}Not Found{% endif %}</title>
+</head>
+<body style="background-color: #5a5a5a; color: white; text-align: center;">
+
+	<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+		<h1 style="font-size: 45pt">{% if LANGUAGE_CODE == 'fa' %}صفحه پیدا نشد{% elif LANGUAGE_CODE == 'en' %}Not Found Page{% endif %}</h1>
+		<span style="font-size: 15pt">{% if LANGUAGE_CODE == 'fa' %}برگرد عقب!!{% elif LANGUAGE_CODE == 'en' %}go Back!!{% endif %}</span>
+	</div>
+
+</body>
+</html>

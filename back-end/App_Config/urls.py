@@ -25,6 +25,8 @@ urlpatterns += i18n_patterns(
     path('achille/admin/panel', admin.site.urls),
 )
 
+handler404 = 'app_api.views.error_404_view'
+
 if settings.DEBUG:
     urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

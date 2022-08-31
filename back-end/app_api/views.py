@@ -2,6 +2,7 @@ import csv
 import os
 import datetime
 import random
+from django.shortcuts import render
 from django.http import HttpResponse
 from persiantools.jdatetime import JalaliDate
 from rest_framework.views import APIView
@@ -15,6 +16,12 @@ from .serializers import (
 )
 from app_auth.models import User 
 from .models import BankModel, TransactionModel, VersionsModel, ProfileCollectorModel
+
+
+
+# url: notfound pages
+def error_404_view(request, exception):
+    return render(request, '404.html')
 
 
 # url: /api/v1/get-user-data/

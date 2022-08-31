@@ -6,8 +6,8 @@ from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG')
-ALLOWED_HOSTS = []
+DEBUG = False
+ALLOWED_HOSTS = ['']
 
 # Application definition
 INSTALLED_APPS = [
@@ -46,7 +46,7 @@ ROOT_URLCONF = 'App_Config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
