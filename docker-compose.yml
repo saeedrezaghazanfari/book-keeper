@@ -1,0 +1,56 @@
+
+# this volume is among of 2 container: back & nginx, for serve the media files in nginx
+volumes:
+  mediafiles_volume:
+    
+services:
+
+  db:
+    image: 'postgres:alpine'
+    container_name: 'db_con'
+    restart: 'always'
+    volumes:
+      - './back-end/data/db:/var/lib/postgresql/data'
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
+
+  app:
+    build: './back-end/app'
+    container_name: 'back_con'
+    restart: 'always'
+    volumes:
+      - type: 'bind'
+        source: './back-end/volumes/app'
+        target: '/app'
+      - 'mediafiles_volume:/media_files'
+    expose: 
+      - '8000'
+    depends_on:
+      - 'db'
+
+
+  front:
+    build: './front-end'
+    restart: 'always'
+    container_name: 'front_con'
+    ports:
+      - '8080:80'
+    depends_on:
+      - 'app'
+
+
+  nginx:
+    build: './back-end/nginx'
+    container_name: 'nginx_con'
+    restart: 'always'
+    volumes:
+      - type: 'bind'
+        source: './back-end/volumes/static_files'
+        target: '/app/static_files'
+      - 'mediafiles_volume:/app/media_files'
+    ports:
+      - '80:80'

@@ -4,7 +4,7 @@ import translations from '../translations'
 import { createLangRouter } from 'vue-lang-router'
 
 const langRouterOptions = {
-	defaultLanguage: 'en',
+	defaultLanguage: 'fa',
 	translations,
 }
 const routerOptions = {
